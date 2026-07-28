@@ -1,0 +1,23 @@
+name: usea
+repo: iestarks/USEA
+description: >
+  Universal Starks Enterprise Agent (USEA) - LangChain-based, multi-provider
+  (OpenAI/Anthropic/Google) operations agent with a FastAPI streaming backend.
+
+prompt:
+  target_file: do-anything-agent.py
+  variable_name: system_content
+  baseline_file: usea/system_prompt.baseline.txt
+
+tool_manifest:
+  target_file: do-anything-agent.py
+  decorator_name: tool
+  baseline_file: usea/tool_manifest.baseline.json
+
+mcp_servers:
+  config_file: usea.mcp.json
+
+evals:
+  suite_file: usea_suite.yaml
+  fixtures_dir: fixtures
+  live_entrypoint: do-anything-agent.py

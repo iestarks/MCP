@@ -1,0 +1,30 @@
+# Policy-as-code rules for Gate 2: tool manifest diffing.
+# Every tool exposed to the agent must be explicitly classified here.
+# risk: low | medium | high | critical
+# Any tool NOT listed here always fails the gate (fail closed).
+version: 1
+
+tools:
+  list_directory:
+    risk: low
+    capability: filesystem-read
+    justification: "Read-only directory listing."
+  read_text_file:
+    risk: low
+    capability: filesystem-read
+    justification: "Read-only file access, bounded by max_chars."
+  write_text_file:
+    risk: high
+    capability: filesystem-write
+    justification: "Writes arbitrary files anywhere the process can reach; path is not sandboxed."
+  run_command:
+    risk: critical
+    capability: shell-execution
+    justification: "Arbitrary shell execution; highest blast radius tool in the manifest."
+
+# Risk tiers that require a sign-off entry (in tool_manifest_review_log.yaml)
+# whenever a tool at that tier is newly added, or its signature/description
+# changes.
+review_required_risk_tiers:
+  - high
+  - critical

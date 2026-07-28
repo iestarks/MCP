@@ -1,0 +1,32 @@
+# Policy-as-code rules for Gate 3: MCP server vetting.
+# Applies to any mcp.json-style config (mcpServers/servers map) declaring
+# MCP servers available to a governed agent's environment.
+version: 1
+
+# Allowed launch commands for MCP servers.
+allowed_commands:
+  - python
+  - python3
+  - uvx
+  - npx
+  - docker
+
+# Reject unpinned npx/uvx invocations (e.g. "npx -y some-server" with no
+# @version, or "uvx some-server" with no ==version).
+require_pinned_version: true
+
+# Domains allowed for MCP servers that connect over HTTP/SSE instead of stdio.
+allowed_remote_domains:
+  - localhost
+  - 127.0.0.1
+
+# Env var name patterns that must never carry a literal value in the config.
+# Values for matching keys must use "${VAR_NAME}" expansion instead.
+secret_env_key_patterns:
+  - "API_KEY"
+  - "TOKEN"
+  - "SECRET"
+  - "PASSWORD"
+
+# Every server entry must include a trust_review block (reviewer/date/notes).
+require_trust_review: true

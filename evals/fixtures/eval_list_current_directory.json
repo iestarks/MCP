@@ -1,0 +1,5 @@
+{
+  "query": "List the files in the current directory.",
+  "tool_calls": ["list_directory"],
+  "output": "Here are the files in the current directory: README.md, do-anything-agent.py, api/, tests/, requirements.txt."
+}

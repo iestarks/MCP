@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "policy-gate": {
+      "command": "python3",
+      "args": ["-m", "policy_gate.server"],
+      "env": {},
+      "trust_review": {
+        "reviewer": "platform-security",
+        "date": "2026-07-28",
+        "notes": "First-party governance server; source reviewed in iestarks/MCP."
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem@0.6.2", "/Users/wolfpacker/development/USEA"],
+      "env": {},
+      "trust_review": {
+        "reviewer": "platform-security",
+        "date": "2026-07-28",
+        "notes": "Official reference server, pinned version, scoped to the USEA repo path only."
+      }
+    }
+  }
+}

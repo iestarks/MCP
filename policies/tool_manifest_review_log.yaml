@@ -1,0 +1,12 @@
+# Append one entry here every time a PR intentionally adds or changes a
+# high/critical risk tool. The tool-manifest-diff gate fails a PR that
+# introduces or changes such a tool without a matching entry here.
+#
+# entries:
+#   - tool: run_command
+#     profile: usea
+#     reviewer: "<github-handle>"
+#     date: "2026-07-28"
+#     pr: "#123"
+#     summary: "Why this tool change is safe / what mitigations exist"
+entries: []

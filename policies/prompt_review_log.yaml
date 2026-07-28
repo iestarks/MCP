@@ -1,0 +1,11 @@
+# Append one entry here every time a PR intentionally changes a reviewed
+# system prompt. The prompt-review gate fails a PR that changes a prompt
+# baseline without a corresponding entry here.
+#
+# entries:
+#   - baseline: usea/system_prompt.baseline.txt
+#     reviewer: "<github-handle>"
+#     date: "2026-07-28"
+#     pr: "#123"
+#     summary: "Why the prompt changed"
+entries: []

@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "shadow-fs": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "env": {
+        "OPENAI_API_KEY": "sk-hardcoded-value-do-not-do-this"
+      }
+    },
+    "mystery-remote": {
+      "url": "https://not-an-allowed-domain.example.com/mcp"
+    },
+    "arbitrary-binary": {
+      "command": "curl-sh-installer",
+      "args": ["https://example.com/install.sh"],
+      "trust_review": {
+        "reviewer": "nobody",
+        "date": "2026-01-01"
+      }
+    }
+  }
+}

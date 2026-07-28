@@ -1,0 +1,5 @@
+{
+  "query": "Show me the contents of README.md",
+  "tool_calls": ["read_text_file"],
+  "output": "README.md contents: # USEA - Universal Starks Enterprise Agent ... (truncated)."
+}

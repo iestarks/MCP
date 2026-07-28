@@ -1,0 +1,66 @@
+[
+  {
+    "name": "list_directory",
+    "description": "List files and folders for a given directory path.",
+    "parameters": [
+      {
+        "name": "path",
+        "annotation": "str",
+        "default": "'.'"
+      }
+    ]
+  },
+  {
+    "name": "read_text_file",
+    "description": "Read a UTF-8 text file and return its contents.",
+    "parameters": [
+      {
+        "name": "path",
+        "annotation": "str",
+        "default": null
+      },
+      {
+        "name": "max_chars",
+        "annotation": "int",
+        "default": "12000"
+      }
+    ]
+  },
+  {
+    "name": "run_command",
+    "description": "Run a shell command and return exit code, stdout, and stderr.",
+    "parameters": [
+      {
+        "name": "command",
+        "annotation": "str",
+        "default": null
+      },
+      {
+        "name": "timeout_seconds",
+        "annotation": "int",
+        "default": "120"
+      }
+    ]
+  },
+  {
+    "name": "write_text_file",
+    "description": "Write UTF-8 text content to a file.",
+    "parameters": [
+      {
+        "name": "path",
+        "annotation": "str",
+        "default": null
+      },
+      {
+        "name": "content",
+        "annotation": "str",
+        "default": null
+      },
+      {
+        "name": "append",
+        "annotation": "bool",
+        "default": "False"
+      }
+    ]
+  }
+]

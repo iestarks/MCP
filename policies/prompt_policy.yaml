@@ -1,0 +1,33 @@
+# Policy-as-code rules for Gate 1: prompt / system-prompt review.
+# Applies to the system prompt text assembled in the governed agent's
+# entrypoint (for the "usea" profile: do-anything-agent.py / system_content).
+version: 1
+
+# Regex patterns that must NEVER appear in the assembled system prompt
+# (matched case-insensitively).
+forbidden_patterns:
+  - pattern: "ignore (all|any|previous) (instructions|rules)"
+    reason: "Classic prompt-injection / jailbreak phrasing must not be baked into the system prompt."
+  - pattern: "\\bDAN\\b|do anything now"
+    reason: "Known jailbreak persona pattern."
+  - pattern: "disable (safety|guardrails|filters)"
+    reason: "Prompt must not instruct the model to disable safety behavior."
+  - pattern: "(never|do not) (refuse|decline)"
+    reason: "Prompt must not blanket-forbid refusals for unsafe requests."
+  - pattern: "output (the )?(raw|full) (secret|credential|password|api[_ ]?key)"
+    reason: "Prompt must not instruct the model to leak secrets."
+
+# Substrings/phrases that MUST be present somewhere in the assembled prompt.
+required_patterns:
+  - pattern: "mask"
+    reason: "Prompt must instruct the agent to mask/redact sensitive values."
+  - pattern: "risk"
+    reason: "Prompt must instruct the agent to call out risk before acting."
+
+max_length_chars: 4000
+
+# If the extracted prompt differs from the recorded baseline, the PR must
+# also update the baseline file AND add a matching entry to
+# prompt_review_log.yaml naming a human reviewer. This makes prompt changes
+# visible in diffs instead of silently drifting.
+require_reviewer_log_on_change: true
