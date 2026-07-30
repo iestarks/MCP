@@ -8,4 +8,16 @@
 #     date: "2026-07-28"
 #     pr: "#123"
 #     summary: "Why the prompt changed"
-entries: []
+entries:
+  - baseline: usea/system_prompt.baseline.txt
+    reviewer: "iestarks"
+    date: "2026-07-29"
+    pr: "N/A - local privacy-mode feature review"
+    summary: >
+      Added a "Local Privacy Mode Policy" block to system_content, injected
+      only when --privacy / privacy_mode=True is active. Instructs the model
+      not to read/quote/summarize credential-secret files, not to dump env
+      vars/credentials, and not to suggest sending data to external services
+      beyond what's required. Reviewed against policies/prompt_policy.yaml:
+      no forbidden patterns matched, required "mask"/"risk" patterns present,
+      1311 chars (under the 4000 char limit).

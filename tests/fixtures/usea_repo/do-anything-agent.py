@@ -45,6 +45,7 @@ def _run_with_fallback(
     model_candidates: list[str] | None,
     vault_enabled: bool = False,
     vault_simulate: bool = True,
+    privacy_mode: bool = False,
 ) -> dict[str, Any]:
     for candidate in ["gpt-4o-mini"]:
         system_content = "You are a universal operations agent. Handle instructions and queries for any context using available tools.\n\n"
@@ -59,6 +60,16 @@ def _run_with_fallback(
                 "4) Always call fetch_keyvault_metadata before any unseal_node call.\n"
                 "5) Never emit full raw credentials - mask trailing characters.\n"
                 "6) If risky, explain the risk before proceeding.\n\n"
+            )
+
+        if privacy_mode:
+            system_content += (
+                "Local Privacy Mode Policy:\n"
+                "1) Do not read, quote, or summarize the contents of credential/secret files "
+                "(.env, keys, tokens, cloud credentials).\n"
+                "2) Do not run commands that dump environment variables or credentials.\n"
+                "3) Keep the response self-contained; do not suggest sending data to any "
+                "external service beyond what is required to answer.\n\n"
             )
 
         system_content += (
