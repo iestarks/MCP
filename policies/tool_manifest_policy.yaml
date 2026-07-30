@@ -21,6 +21,15 @@ tools:
     risk: critical
     capability: shell-execution
     justification: "Arbitrary shell execution; highest blast radius tool in the manifest."
+  recall_prior_prompts:
+    risk: low
+    capability: local-memory-read
+    justification: >
+      Read-only lookup against the agent's own local encrypted SQLite prompt
+      history. With no query, scoped to the current session id; with a
+      query, does a local keyword-overlap relevance search across all
+      sessions (still no filesystem path traversal, no shell execution,
+      no network egress -- everything stays within the local SQLite file).
 
 # Risk tiers that require a sign-off entry (in tool_manifest_review_log.yaml)
 # whenever a tool at that tier is newly added, or its signature/description

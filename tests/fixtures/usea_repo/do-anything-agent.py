@@ -38,6 +38,15 @@ def write_text_file(path: str, content: str, append: bool = False) -> str:
     ...
 
 
+@tool
+def recall_prior_prompts(query: str = "", limit: int = 5) -> str:
+    """Recall prior prompts and responses from local encrypted memory, optionally filtered by a search query."""
+    ...
+
+
+MEMORY_AVAILABLE = True
+
+
 def _run_with_fallback(
     instruction: str,
     model_name: str,
@@ -70,6 +79,18 @@ def _run_with_fallback(
                 "2) Do not run commands that dump environment variables or credentials.\n"
                 "3) Keep the response self-contained; do not suggest sending data to any "
                 "external service beyond what is required to answer.\n\n"
+            )
+
+        if MEMORY_AVAILABLE:
+            system_content += (
+                "Local Memory Policy:\n"
+                "1) Relevant prior prompts/responses may already be auto-recalled as "
+                "context below; use them only if truly relevant, otherwise ignore.\n"
+                "2) Call recall_prior_prompts (optionally with a search query) to look "
+                "up more local history yourself, e.g. when the user references something "
+                "not already shown.\n"
+                "3) Stored history is encrypted at rest on the local machine and is never "
+                "sent to LangSmith or any third party.\n\n"
             )
 
         system_content += (

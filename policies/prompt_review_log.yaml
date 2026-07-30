@@ -21,3 +21,34 @@ entries:
       beyond what's required. Reviewed against policies/prompt_policy.yaml:
       no forbidden patterns matched, required "mask"/"risk" patterns present,
       1311 chars (under the 4000 char limit).
+  - baseline: usea/system_prompt.baseline.txt
+    reviewer: "iestarks"
+    date: "2026-07-30"
+    pr: "N/A - local encrypted prompt memory feature review"
+    summary: >
+      Added a "Local Memory Policy" block to system_content, injected only
+      when the local encrypted prompt-memory store (prompt_memory.py) is
+      available. Tells the model that prior prompts/responses can be
+      recalled via the new recall_prior_prompts tool, and that stored
+      history is encrypted at rest locally and never sent to LangSmith or
+      any third party. Reviewed against policies/prompt_policy.yaml: no
+      forbidden patterns matched, required "mask"/"risk" patterns still
+      present (from the unchanged General Policy block), 1598 chars total
+      (under the 4000 char limit).
+  - baseline: usea/system_prompt.baseline.txt
+    reviewer: "iestarks"
+    date: "2026-07-30"
+    pr: "N/A - auto-recall + agentic memory search follow-up"
+    summary: >
+      Reworded the "Local Memory Policy" block: session ids are now
+      auto-assigned per CLI run instead of a fixed default, so continuity
+      comes from a new cross-session keyword-overlap relevance search
+      (PromptMemoryStore.find_related) instead of session-id matching.
+      Relevant prior context is now auto-recalled and injected as a
+      separate message before the instruction (not part of this static
+      system_content block); the policy text now also tells the model it
+      can call recall_prior_prompts with an explicit search query for
+      on-demand agentic lookups. Reviewed against
+      policies/prompt_policy.yaml: no forbidden patterns matched, required
+      "mask"/"risk" patterns still present, 1739 chars total (under the
+      4000 char limit).

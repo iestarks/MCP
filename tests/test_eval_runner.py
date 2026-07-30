@@ -7,7 +7,7 @@ def test_static_suite_passes_for_usea_profile():
     result = eval_runner.gate(repo_path="/unused", profile_name="usea", mode="static")
     assert result.status == "pass", result.violations
     assert result.details["pass_rate"] == 1.0
-    assert len(result.details["cases"]) == 4
+    assert len(result.details["cases"]) == 5
 
 
 def test_blocking_case_failure_fails_gate_even_with_high_pass_rate(monkeypatch, tmp_path):

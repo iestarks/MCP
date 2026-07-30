@@ -1,65 +1,81 @@
 [
   {
-    "name": "list_directory",
     "description": "List files and folders for a given directory path.",
+    "name": "list_directory",
     "parameters": [
       {
-        "name": "path",
         "annotation": "str",
-        "default": "'.'"
+        "default": "'.'",
+        "name": "path"
       }
     ]
   },
   {
-    "name": "read_text_file",
     "description": "Read a UTF-8 text file and return its contents.",
+    "name": "read_text_file",
     "parameters": [
       {
-        "name": "path",
         "annotation": "str",
-        "default": null
+        "default": null,
+        "name": "path"
       },
       {
-        "name": "max_chars",
         "annotation": "int",
-        "default": "12000"
+        "default": "12000",
+        "name": "max_chars"
       }
     ]
   },
   {
-    "name": "run_command",
+    "description": "Recall prior prompts and responses from local encrypted memory, optionally filtered by a search query.",
+    "name": "recall_prior_prompts",
+    "parameters": [
+      {
+        "annotation": "str",
+        "default": "''",
+        "name": "query"
+      },
+      {
+        "annotation": "int",
+        "default": "5",
+        "name": "limit"
+      }
+    ]
+  },
+  {
     "description": "Run a shell command and return exit code, stdout, and stderr.",
+    "name": "run_command",
     "parameters": [
       {
-        "name": "command",
         "annotation": "str",
-        "default": null
+        "default": null,
+        "name": "command"
       },
       {
-        "name": "timeout_seconds",
         "annotation": "int",
-        "default": "120"
+        "default": "120",
+        "name": "timeout_seconds"
       }
     ]
   },
   {
-    "name": "write_text_file",
     "description": "Write UTF-8 text content to a file.",
+    "name": "write_text_file",
     "parameters": [
       {
-        "name": "path",
         "annotation": "str",
-        "default": null
+        "default": null,
+        "name": "path"
       },
       {
-        "name": "content",
         "annotation": "str",
-        "default": null
+        "default": null,
+        "name": "content"
       },
       {
-        "name": "append",
         "annotation": "bool",
-        "default": "False"
+        "default": "False",
+        "name": "append"
       }
     ]
   }

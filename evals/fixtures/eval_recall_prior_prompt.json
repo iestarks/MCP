@@ -1,0 +1,5 @@
+{
+  "query": "What did I ask you before?",
+  "tool_calls": ["recall_prior_prompts"],
+  "output": "Earlier in this session you asked about listing the files in the current directory. I recalled that from local encrypted prompt memory."
+}
