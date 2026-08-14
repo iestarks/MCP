@@ -15,6 +15,7 @@ checks it against a policy-as-code rule set:
 from __future__ import annotations
 
 import ast
+import hashlib
 import re
 from pathlib import Path
 
@@ -23,21 +24,42 @@ from .models import GateResult
 from .paths import BASELINES_DIR
 
 
-def _literal_text(node: ast.AST | None) -> str | None:
+def _literal_text(node: ast.AST | None, call_fragments: dict[str, str] | None = None) -> str | None:
     """Best-effort constant-folding of string literals and ``+`` concatenation."""
     if node is None:
         return None
     if isinstance(node, ast.Constant) and isinstance(node.value, str):
         return node.value
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
-        left = _literal_text(node.left)
-        right = _literal_text(node.right)
+        left = _literal_text(node.left, call_fragments)
+        right = _literal_text(node.right, call_fragments)
         if left is not None and right is not None:
             return left + right
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+        return (call_fragments or {}).get(node.func.id)
     return None
 
 
-def extract_system_prompt(source_path: Path, variable_name: str = "system_content") -> str:
+def extract_function_returns(source_path: Path, function_name: str) -> str:
+    """Collect every literal return value from a configured helper function."""
+    tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == function_name:
+            returns = sorted(
+                (child for child in ast.walk(node) if isinstance(child, ast.Return)),
+                key=lambda child: child.lineno,
+            )
+            return "".join(
+                text for child in returns if (text := _literal_text(child.value)) is not None
+            )
+    return ""
+
+
+def extract_system_prompt(
+    source_path: Path,
+    variable_name: str = "system_content",
+    call_fragments: dict[str, str] | None = None,
+) -> str:
     """Reconstruct the full text assigned/appended to ``variable_name``.
 
     Statements are ordered by source line number (not AST traversal order),
@@ -62,7 +84,7 @@ def extract_system_prompt(source_path: Path, variable_name: str = "system_conten
         if target_name != variable_name:
             continue
 
-        text = _literal_text(value_node)
+        text = _literal_text(value_node, call_fragments)
         if text is not None:
             chunks.append((node.lineno, text))
 
@@ -84,7 +106,30 @@ def gate(repo_path: str | Path, profile_name: str = "usea") -> GateResult:
         return GateResult("prompt_review", "fail", [f"target file not found: {source_path}"])
 
     try:
-        extracted = extract_system_prompt(source_path, variable_name)
+        source_tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
+        called_functions = {
+            node.func.id
+            for node in ast.walk(source_tree)
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+        }
+        call_fragments: dict[str, str] = {}
+        for helper in prompt_cfg.get("helper_functions", []) or []:
+            if helper["function_name"] not in called_functions:
+                continue
+            helper_path = Path(repo_path) / helper["target_file"]
+            if not helper_path.exists():
+                return GateResult(
+                    "prompt_review", "fail", [f"prompt helper file not found: {helper_path}"]
+                )
+            helper_text = extract_function_returns(helper_path, helper["function_name"])
+            if not helper_text.strip():
+                return GateResult(
+                    "prompt_review",
+                    "fail",
+                    [f"no literal returns found for prompt helper '{helper['function_name']}' in {helper_path}"],
+                )
+            call_fragments[helper["function_name"]] = helper_text
+        extracted = extract_system_prompt(source_path, variable_name, call_fragments)
     except SyntaxError as exc:
         return GateResult("prompt_review", "fail", [f"failed to parse {source_path}: {exc}"])
 
@@ -118,15 +163,19 @@ def gate(repo_path: str | Path, profile_name: str = "usea") -> GateResult:
 
     is_new_baseline = baseline_path is not None and baseline_text is None
     changed = baseline_text is not None and baseline_text.strip() != extracted.strip()
+    prompt_sha256 = hashlib.sha256(extracted.strip().encode("utf-8")).hexdigest()
 
-    if changed and policy.get("require_reviewer_log_on_change", True):
+    if baseline_path is not None and policy.get("require_reviewer_log_on_change", True):
         entries = review_log.get("entries") or []
-        signed_off = any(entry.get("baseline") == baseline_rel for entry in entries)
+        signed_off = any(
+            entry.get("baseline") == baseline_rel and entry.get("prompt_sha256") == prompt_sha256
+            for entry in entries
+        )
         if not signed_off:
             violations.append(
-                f"system prompt changed from baseline '{baseline_rel}' with no matching entry in "
-                f"policies/prompt_review_log.yaml. Update the baseline file and log a reviewer entry "
-                "to intentionally accept this change."
+                f"system prompt digest {prompt_sha256} has no matching approval for baseline "
+                f"'{baseline_rel}' in policies/prompt_review_log.yaml. Update the baseline and add "
+                "a reviewer entry with this exact prompt_sha256 to intentionally accept the content."
             )
 
     if is_new_baseline:
@@ -148,6 +197,7 @@ def gate(repo_path: str | Path, profile_name: str = "usea") -> GateResult:
             "extracted_length": len(extracted),
             "baseline_file": str(baseline_path) if baseline_path else None,
             "changed_from_baseline": changed,
+            "prompt_sha256": prompt_sha256,
             "extracted_prompt_preview": extracted[:400],
         },
     )

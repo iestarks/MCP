@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from api.access_control import disclosure_policy
+
 
 def tool(func: Any) -> Any:
     return func
@@ -58,6 +60,7 @@ def _run_with_fallback(
 ) -> dict[str, Any]:
     for candidate in ["gpt-4o-mini"]:
         system_content = "You are a universal operations agent. Handle instructions and queries for any context using available tools.\n\n"
+        system_content += disclosure_policy(False)
 
         if vault_enabled:
             system_content += (

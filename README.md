@@ -94,7 +94,10 @@ Key design choices:
 string assigned or `+=`-appended to a configured variable (`system_content`
 for USEA), ordered by source line number so conditional branches (e.g. the
 Vault-policy block that's only appended `if vault_enabled`) come out in
-the same order a human reading the file would see them.
+the same order a human reading the file would see them. Profiles may also
+declare prompt helper functions in other files; all literal return branches
+from those helpers are included so authorization-dependent prompt text cannot
+sit outside the reviewed surface.
 
 The reconstructed text is checked against
 [`policies/prompt_policy.yaml`](policies/prompt_policy.yaml):
@@ -108,13 +111,15 @@ The reconstructed text is checked against
 - **`max_length_chars`** - a hard cap.
 - **Baseline diff** - if the extracted prompt no longer matches
   [`baselines/usea/system_prompt.baseline.txt`](baselines/usea/system_prompt.baseline.txt),
-  the gate fails *unless* `policies/prompt_review_log.yaml` has a matching
-  entry (reviewer, date, PR link). This is what turns "someone tweaked the
-  system prompt" from invisible to a required, attributable sign-off.
+  the gate fails. The exact SHA-256 digest of every accepted prompt must also
+  have a matching `policies/prompt_review_log.yaml` entry (reviewer, date, PR
+  link), so an old review cannot approve later content. This turns "someone
+  tweaked the system prompt" from invisible to a required, attributable
+  sign-off.
 
-To accept an intentional prompt change: update the baseline file with the
-new extracted text, then append an entry to `prompt_review_log.yaml`
-naming the reviewer.
+To accept an intentional prompt change: review and update the baseline file,
+then append an entry to `prompt_review_log.yaml` naming the reviewer and the
+exact `prompt_sha256` reported by the failed gate.
 
 ### Gate 2 - Tool manifest diffing
 

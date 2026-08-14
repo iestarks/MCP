@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
 
 from policy_gate import prompt_review
 
@@ -38,3 +39,47 @@ def test_extract_system_prompt_orders_by_source_line(tmp_path):
         encoding="utf-8",
     )
     assert prompt_review.extract_system_prompt(source) == "ABC"
+
+
+def test_extract_system_prompt_includes_configured_helper_returns(tmp_path):
+    helper = tmp_path / "policy.py"
+    helper.write_text(
+        "def disclosure_policy(allowed):\n"
+        "    if allowed:\n"
+        "        return 'ADMIN'\n"
+        "    return 'RESTRICTED'\n",
+        encoding="utf-8",
+    )
+    source = tmp_path / "agent.py"
+    source.write_text(
+        "def f():\n"
+        "    system_content = 'BASE'\n"
+        "    system_content += disclosure_policy(False)\n",
+        encoding="utf-8",
+    )
+
+    fragments = {"disclosure_policy": prompt_review.extract_function_returns(helper, "disclosure_policy")}
+    assert prompt_review.extract_system_prompt(source, call_fragments=fragments) == "BASEADMINRESTRICTED"
+
+
+def test_prompt_approval_is_bound_to_exact_digest(monkeypatch, tmp_path):
+    source = tmp_path / "agent.py"
+    source.write_text("system_content = 'review me'\n", encoding="utf-8")
+    digest = hashlib.sha256(b"review me").hexdigest()
+
+    monkeypatch.setattr(prompt_review, "load_profile", lambda _name: {
+        "prompt": {"target_file": "agent.py", "baseline_file": "usea/system_prompt.baseline.txt"}
+    })
+    monkeypatch.setattr(prompt_review, "load_policy", lambda name: {
+        "prompt_policy.yaml": {"require_reviewer_log_on_change": True},
+        "prompt_review_log.yaml": {
+            "entries": [{"baseline": "usea/system_prompt.baseline.txt", "prompt_sha256": digest}]
+        },
+    }[name])
+
+    approved = prompt_review.gate(tmp_path)
+    assert not any("has no matching approval" in violation for violation in approved.violations)
+
+    source.write_text("system_content = 'changed'\n", encoding="utf-8")
+    rejected = prompt_review.gate(tmp_path)
+    assert any("has no matching approval" in violation for violation in rejected.violations)

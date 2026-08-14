@@ -8,6 +8,9 @@ prompt:
   target_file: do-anything-agent.py
   variable_name: system_content
   baseline_file: usea/system_prompt.baseline.txt
+  helper_functions:
+    - target_file: api/access_control.py
+      function_name: disclosure_policy
 
 tool_manifest:
   target_file: do-anything-agent.py

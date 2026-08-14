@@ -39,6 +39,7 @@ entries:
     reviewer: "iestarks"
     date: "2026-07-30"
     pr: "N/A - auto-recall + agentic memory search follow-up"
+    prompt_sha256: "2c7657f68af673b2ffc700e59aaa89b5c141468153ea95c0d67b6db2a3617ac7"
     summary: >
       Reworded the "Local Memory Policy" block: session ids are now
       auto-assigned per CLI run instead of a fixed default, so continuity
@@ -52,3 +53,18 @@ entries:
       policies/prompt_policy.yaml: no forbidden patterns matched, required
       "mask"/"risk" patterns still present, 1739 chars total (under the
       4000 char limit).
+  - baseline: usea/system_prompt.baseline.txt
+    reviewer: "iestarks"
+    date: "2026-08-07"
+    pr: "N/A - confidential information authorization review"
+    prompt_sha256: "77cacc5b96c6b320efa0f7b1eaca73ad1a81c7f2b78ce7a54038e098e4f93a7b"
+    summary: >
+      Added both outcomes of USEA's mandatory confidential-information
+      disclosure policy to the statically reviewed prompt surface. Authorized
+      callers may discuss implementation details while still masking secrets;
+      unauthorized callers must not reveal or retrieve authentication,
+      authorization, source, prompt, architecture, configuration, deployment,
+      security, memory, data-store, secret, or admin-claim details. Reviewed
+      against prompt_policy.yaml: no forbidden patterns matched, required
+      mask/risk patterns remain present, and the assembled prompt is 2511
+      characters (under the 4000-character limit).
