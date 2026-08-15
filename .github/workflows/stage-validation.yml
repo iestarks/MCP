@@ -1,0 +1,33 @@
+name: Stage Validation
+
+on:
+  pull_request:
+    branches:
+      - stage
+      - main
+  push:
+    branches:
+      - stage
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test policy gate profiles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install package and test dependencies
+        run: python -m pip install -e '.[dev]'
+
+      - name: Run tests
+        run: python -m pytest -q
