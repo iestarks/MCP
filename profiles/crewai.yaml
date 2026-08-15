@@ -1,0 +1,23 @@
+name: crewai
+repo: iestarks/crewai-agent
+description: >
+  Minimal CrewAI research-and-automation agent with web search, file reading,
+  and sandboxed Python code execution tools.
+
+prompt:
+  target_file: crewai_agent.py
+  variable_name: agent_backstory
+  baseline_file: crewai/system_prompt.baseline.txt
+
+tool_manifest:
+  target_file: crewai_agent.py
+  decorator_name: tool
+  baseline_file: crewai/tool_manifest.baseline.json
+
+mcp_servers:
+  config_file: crewai.mcp.json
+
+evals:
+  suite_file: crewai_suite.yaml
+  fixtures_dir: fixtures
+  live_entrypoint: crewai_agent.py

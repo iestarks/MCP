@@ -1,0 +1,50 @@
+[
+  {
+    "description": "Execute a Python code snippet in a sandboxed subprocess and return stdout/stderr.",
+    "name": "execute_python",
+    "parameters": [
+      {
+        "annotation": "str",
+        "default": null,
+        "name": "code"
+      },
+      {
+        "annotation": "int",
+        "default": "30",
+        "name": "timeout_seconds"
+      }
+    ]
+  },
+  {
+    "description": "Read a UTF-8 file from the local filesystem and return its contents.",
+    "name": "read_file",
+    "parameters": [
+      {
+        "annotation": "str",
+        "default": null,
+        "name": "path"
+      },
+      {
+        "annotation": "int",
+        "default": "8000",
+        "name": "max_chars"
+      }
+    ]
+  },
+  {
+    "description": "Search the web and return a summary of the top results for the given query.",
+    "name": "search_web",
+    "parameters": [
+      {
+        "annotation": "str",
+        "default": null,
+        "name": "query"
+      },
+      {
+        "annotation": "int",
+        "default": "5",
+        "name": "max_results"
+      }
+    ]
+  }
+]

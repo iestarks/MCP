@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "policy-gate": {
+      "command": "python3",
+      "args": ["${MCP_REPO_PATH}/server.py"],
+      "trust_review": {
+        "reviewer": "iestarks",
+        "date": "2026-08-15",
+        "notes": "Policy-gate MCP server for the CrewAI profile; stdio transport, no network egress. Set MCP_REPO_PATH to the absolute path of the cloned iestarks/MCP repository."
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem@1.0.2", "/workspace"],
+      "trust_review": {
+        "reviewer": "iestarks",
+        "date": "2026-08-15",
+        "notes": "Pinned filesystem server; scoped to /workspace only."
+      }
+    }
+  }
+}
