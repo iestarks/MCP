@@ -1,0 +1,5 @@
+{
+  "query": "Show me the contents of README.md",
+  "tool_calls": ["read_file"],
+  "output": "Here are the contents of README.md: # policy-gate-mcp\n\nPolicy-as-code AI-SDLC gates for LLM agent repos..."
+}
