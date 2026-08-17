@@ -223,6 +223,28 @@ policy-gate --profile usea json /path/to/USEA
 Exit code is `0` if every gate passed (or only warned), `1` if any gate
 failed.
 
+### CrewAI profile quick check
+
+This repo also ships a `crewai` profile with dedicated baselines, MCP
+config, and eval fixtures. Use it to validate CrewAI-focused agent repos
+with the same policy-gate engine:
+
+```bash
+# Run all gates against the bundled CrewAI fixture repo
+policy-gate --profile crewai check-all tests/fixtures/crewai_repo
+
+# Optional: view a JSON report for automation/debugging
+policy-gate --profile crewai json tests/fixtures/crewai_repo
+```
+
+Related profile assets:
+
+- [`profiles/crewai.yaml`](profiles/crewai.yaml)
+- [`baselines/crewai/system_prompt.baseline.txt`](baselines/crewai/system_prompt.baseline.txt)
+- [`baselines/crewai/tool_manifest.baseline.json`](baselines/crewai/tool_manifest.baseline.json)
+- [`configs/crewai.mcp.json`](configs/crewai.mcp.json)
+- [`evals/crewai_suite.yaml`](evals/crewai_suite.yaml)
+
 ### As an MCP server (interactive use during development)
 
 ```bash
