@@ -9,4 +9,15 @@
 #     date: "2026-07-28"
 #     pr: "#123"
 #     summary: "Why this tool change is safe / what mitigations exist"
-entries: []
+entries:
+  - tool: execute_python
+    profile: crewai
+    reviewer: "iestarks"
+    date: "2026-08-15"
+    pr: "N/A - initial crewai scaffolding"
+    summary: >
+      Initial registration of the execute_python tool for the CrewAI profile.
+      Classified as critical (arbitrary Python subprocess execution). In
+      production, this tool must be wrapped with a sandbox (e.g. gVisor or
+      nsjail). Reviewed and accepted as the foundational baseline for the
+      crewai profile.

@@ -68,3 +68,24 @@ entries:
       against prompt_policy.yaml: no forbidden patterns matched, required
       mask/risk patterns remain present, and the assembled prompt is 2511
       characters (under the 4000-character limit).
+  - baseline: crewai/system_prompt.baseline.txt
+    reviewer: "iestarks"
+    date: "2026-08-15"
+    pr: "N/A - initial crewai scaffolding"
+    prompt_sha256: "6a897c7369546ee23e6eff66f8d81bb60afc39b4b9b6debba4f88f1996b0f907"
+    summary: >
+      Initial CrewAI agent backstory. Instructs the assistant to explain risk
+      before executing code or reading sensitive files, and to mask sensitive
+      values. Both required patterns (mask, risk) are present. No forbidden
+      patterns matched. 652 characters (well under the 4000-char limit).
+  - baseline: usea/system_prompt.baseline.txt
+    reviewer: "iestarks"
+    date: "2026-08-15"
+    pr: "iestarks/USEA#25 - staging validation"
+    prompt_sha256: "0fe86ae0467c6225e0c0e6a74ddece787a0738d4a457c4ca209f85f9395cee52"
+    summary: >
+      Reconciled the reviewed baseline with the behavior already deployed on
+      USEA main: short confirmations continue the latest assistant question,
+      while genuinely unclear requests with no conversation history receive
+      one focused follow-up question. Required mask and risk controls remain
+      unchanged, and no forbidden prompt patterns matched.

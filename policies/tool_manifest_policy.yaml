@@ -31,6 +31,27 @@ tools:
       sessions (still no filesystem path traversal, no shell execution,
       no network egress -- everything stays within the local SQLite file).
 
+  # CrewAI agent tools
+  search_web:
+    risk: medium
+    capability: network-egress
+    justification: >
+      Issues outbound HTTP requests to arbitrary search engine endpoints.
+      Results are read-only and summarised; no writes or code execution.
+      Medium risk because network egress can be used for SSRF or data
+      exfiltration if the query is attacker-controlled.
+  read_file:
+    risk: low
+    capability: filesystem-read
+    justification: "Read-only file access bounded by max_chars; no writes or shell execution."
+  execute_python:
+    risk: critical
+    capability: code-execution
+    justification: >
+      Runs arbitrary Python code in a subprocess. Equivalent blast radius to
+      shell execution: full read/write filesystem access, network egress,
+      process spawning. Must be sandboxed in production (e.g. gVisor / nsjail).
+
 # Risk tiers that require a sign-off entry (in tool_manifest_review_log.yaml)
 # whenever a tool at that tier is newly added, or its signature/description
 # changes.

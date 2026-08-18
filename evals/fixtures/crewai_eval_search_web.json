@@ -1,0 +1,5 @@
+{
+  "query": "Search for the latest Python packaging best practices.",
+  "tool_calls": ["search_web"],
+  "output": "Here is a summary of the top results for Python packaging best practices: use pyproject.toml, pin dependencies with hashes, and publish to PyPI via trusted publishers."
+}

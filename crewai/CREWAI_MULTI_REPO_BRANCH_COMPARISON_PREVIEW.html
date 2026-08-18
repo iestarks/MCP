@@ -1,0 +1,168 @@
+<h1>CrewAI Multi-Repository Branch Comparison</h1>
+<blockquote>
+<p>Visual review artifact for comparing the CrewAI feature work with the current <code>main</code> branch across every participating repository.</p>
+</blockquote>
+<p><strong>Snapshot date:</strong> 2026-08-15<br><strong>Comparison basis:</strong> three-dot Git comparison, <code>origin/main...HEAD</code>, which shows the changes introduced since each feature branch diverged from <code>main</code>.</p>
+<h2>Executive View</h2>
+<p>The feature is distributed across four repositories. It should be reviewed as one vertical capability rather than as four unrelated diffs.</p>
+<p><img src="./CREWAI_MULTI_REPO_BRANCH_COMPARISON_PREVIEW-1.svg" alt="diagram"></p>
+<h2>Measured Delta</h2>
+<table>
+<thead>
+<tr>
+<th>Repository</th>
+<th>Branch compared with <code>main</code></th>
+<th align="right">Files changed</th>
+<th align="right">Additions</th>
+<th align="right">Deletions</th>
+<th>Improvement represented</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/iestarks/Hashicorp-Azure-LLM">Hashicorp-Azure-LLM</a></td>
+<td><code>copilot/crewai-integration-scaffolding</code></td>
+<td align="right">34</td>
+<td align="right">709</td>
+<td align="right">0</td>
+<td>Architecture, agents, task contracts, environment profiles, governance, runbooks, and metrics</td>
+</tr>
+<tr>
+<td><a href="https://github.com/iestarks/USEA">USEA</a></td>
+<td><code>copilot/resume-crewai-scaffolding</code></td>
+<td align="right">10</td>
+<td align="right">505</td>
+<td align="right">0</td>
+<td>Working multi-agent runtime, task composition, authenticated API endpoint, models, dependencies, and tests</td>
+</tr>
+<tr>
+<td><a href="https://github.com/iestarks/MCP">MCP</a></td>
+<td><code>copilot/resume-crewai-scaffolding</code></td>
+<td align="right">14</td>
+<td align="right">340</td>
+<td align="right">1</td>
+<td>Governed-agent profile, MCP configuration, prompt/tool baselines, risk policy, refusal evaluations, and tests</td>
+</tr>
+<tr>
+<td><a href="https://github.com/iestarks/policies">policies</a></td>
+<td><code>main</code></td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td>Existing external Vault ACL control plane; included because CrewAI-driven Vault actions ultimately depend on these scoped capabilities</td>
+</tr>
+<tr>
+<td><strong>Feature total</strong></td>
+<td></td>
+<td align="right"><strong>58</strong></td>
+<td align="right"><strong>1,554</strong></td>
+<td align="right"><strong>1</strong></td>
+<td>Design → runtime → governance → authorization</td>
+</tr>
+</tbody></table>
+<p><img src="./CREWAI_MULTI_REPO_BRANCH_COMPARISON_PREVIEW-2.svg" alt="diagram"></p>
+<p>The policy repository is omitted from the additions chart because it is already on <code>main</code> and has no feature-branch delta. Its role is architectural and operational, not a claim of new lines in this branch set.</p>
+<h2>Before and After</h2>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Current <code>main</code> baseline</th>
+<th>CrewAI feature outcome</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Multi-agent design</td>
+<td>No shared cross-repository CrewAI operating model</td>
+<td>Named architecture, specialist agents, ordered tasks, contracts, environment controls, approval gates, runbooks, and metrics</td>
+</tr>
+<tr>
+<td>Runtime execution</td>
+<td>No CrewAI workflow exposed through USEA</td>
+<td>Research/writing and operations crews with reusable agents and tasks, model/provider selection, and authenticated <code>POST /v1/crew/run</code> execution</td>
+</tr>
+<tr>
+<td>Governance</td>
+<td>Existing generic policy-gate framework</td>
+<td>CrewAI-specific profile, reviewed prompt and tool baselines, MCP configuration, risk classifications, refusal fixtures, and automated gate tests</td>
+</tr>
+<tr>
+<td>Vault authorization</td>
+<td>Existing admin and read-only Vault policies</td>
+<td>Explicit integration boundary: CrewAI/Vault workflows remain constrained by short-lived, role-scoped Vault tokens rather than root-equivalent access</td>
+</tr>
+<tr>
+<td>Verification</td>
+<td>No end-to-end CrewAI review surface</td>
+<td>A traceable path from architecture to runtime behavior, policy evidence, tests, and final Vault enforcement</td>
+</tr>
+</tbody></table>
+<h2>Repository Detail</h2>
+<h3>1. Hashicorp-Azure-LLM: architecture and contracts</h3>
+<p>This repository defines what the CrewAI system is intended to do and how repositories exchange governed requests and evidence.</p>
+<p>Key review surfaces:</p>
+<ul>
+<li><a href="https://github.com/iestarks/Hashicorp-Azure-LLM/blob/copilot/crewai-integration-scaffolding/crewai/architecture/sequence-flow.md"><code>crewai/architecture/sequence-flow.md</code></a>: plan-first workflow from infrastructure design through post-deploy verification.</li>
+<li><a href="https://github.com/iestarks/Hashicorp-Azure-LLM/blob/copilot/crewai-integration-scaffolding/crewai/agents/infra_crew.yaml"><code>crewai/agents/infra_crew.yaml</code></a>: orchestrator and specialist-agent composition.</li>
+<li><a href="https://github.com/iestarks/Hashicorp-Azure-LLM/blob/copilot/crewai-integration-scaffolding/crewai/contracts/compatibility-matrix.md"><code>crewai/contracts/compatibility-matrix.md</code></a>: cross-repository adoption and compatibility expectations.</li>
+<li><a href="https://github.com/iestarks/Hashicorp-Azure-LLM/blob/copilot/crewai-integration-scaffolding/crewai/governance/guardrails.md"><code>crewai/governance/guardrails.md</code></a>: safety boundaries and approval requirements.</li>
+<li><a href="https://github.com/iestarks/Hashicorp-Azure-LLM/blob/copilot/crewai-integration-scaffolding/crewai/metrics/evaluation-framework.md"><code>crewai/metrics/evaluation-framework.md</code></a>: measurable quality and reliability targets.</li>
+</ul>
+<p><strong>Visual diff:</strong> <a href="https://github.com/iestarks/Hashicorp-Azure-LLM/compare/main...copilot/crewai-integration-scaffolding">compare <code>main...copilot/crewai-integration-scaffolding</code></a></p>
+<h3>2. USEA: executable multi-agent runtime</h3>
+<p>This repository turns the architecture into application behavior.</p>
+<p>Key review surfaces:</p>
+<ul>
+<li><a href="https://github.com/iestarks/USEA/blob/copilot/resume-crewai-scaffolding/crew/agents.py"><code>crew/agents.py</code></a>: research, writing, and operations agent definitions.</li>
+<li><a href="https://github.com/iestarks/USEA/blob/copilot/resume-crewai-scaffolding/crew/tasks.py"><code>crew/tasks.py</code></a>: reusable task contracts and context chaining.</li>
+<li><a href="https://github.com/iestarks/USEA/blob/copilot/resume-crewai-scaffolding/crew/crew.py"><code>crew/crew.py</code></a>: sequential crew orchestration and supported execution modes.</li>
+<li><a href="https://github.com/iestarks/USEA/blob/copilot/resume-crewai-scaffolding/api/crew_endpoints.py"><code>api/crew_endpoints.py</code></a>: authenticated, non-blocking HTTP execution surface.</li>
+<li><a href="https://github.com/iestarks/USEA/blob/copilot/resume-crewai-scaffolding/tests/test_crew.py"><code>tests/test_crew.py</code></a>: runtime and endpoint behavior coverage.</li>
+</ul>
+<p><strong>Visual diff:</strong> <a href="https://github.com/iestarks/USEA/pull/25/files">PR #25 · Files changed</a><br><strong>Direct comparison:</strong> <a href="https://github.com/iestarks/USEA/compare/main...copilot/resume-crewai-scaffolding"><code>main...copilot/resume-crewai-scaffolding</code></a></p>
+<h3>3. MCP: governance and evaluation</h3>
+<p>This repository makes the CrewAI runtime reviewable and enforceable as an AI-SDLC workload.</p>
+<p>Key review surfaces:</p>
+<ul>
+<li><a href="https://github.com/iestarks/MCP/blob/copilot/resume-crewai-scaffolding/profiles/crewai.yaml"><code>profiles/crewai.yaml</code></a>: governed-agent profile joining prompt, tools, MCP servers, and evaluations.</li>
+<li><a href="https://github.com/iestarks/MCP/blob/copilot/resume-crewai-scaffolding/configs/crewai.mcp.json"><code>configs/crewai.mcp.json</code></a>: pinned and reviewed MCP server configuration.</li>
+<li><a href="https://github.com/iestarks/MCP/blob/copilot/resume-crewai-scaffolding/evals/crewai_suite.yaml"><code>evals/crewai_suite.yaml</code></a>: expected tool use and blocking refusal cases.</li>
+<li><a href="https://github.com/iestarks/MCP/blob/copilot/resume-crewai-scaffolding/policies/tool_manifest_policy.yaml"><code>policies/tool_manifest_policy.yaml</code></a>: risk classification for CrewAI tools.</li>
+<li><a href="https://github.com/iestarks/MCP/blob/copilot/resume-crewai-scaffolding/tests/test_crewai_profile.py"><code>tests/test_crewai_profile.py</code></a>: prompt, tool-manifest, and evaluation gate tests.</li>
+</ul>
+<p><strong>Visual diff:</strong> <a href="https://github.com/iestarks/MCP/pull/2/files">PR #2 · Files changed</a><br><strong>Direct comparison:</strong> <a href="https://github.com/iestarks/MCP/compare/main...copilot/resume-crewai-scaffolding"><code>main...copilot/resume-crewai-scaffolding</code></a></p>
+<h3>4. policies: Vault authorization boundary</h3>
+<p>This repository has no CrewAI feature branch and is currently identical to <code>origin/main</code>. It is included because it holds the final authorization rules for Vault operations initiated through an agentic workflow.</p>
+<p>Key review surfaces:</p>
+<ul>
+<li><a href="https://github.com/iestarks/policies/blob/main/vault/policies/vault-web-agent-admin.hcl"><code>vault/policies/vault-web-agent-admin.hcl</code></a>: scoped administrative capabilities for health, seal state, auth methods, secrets engines, ACL policies, identity, and token lifecycle. It deliberately excludes root-equivalent <code>path &quot;*&quot;</code> access.</li>
+<li><a href="https://github.com/iestarks/policies/blob/main/vault/policies/vault-web-agent-readonly.hcl"><code>vault/policies/vault-web-agent-readonly.hcl</code></a>: deny-by-default inspection capabilities with no write, delete, sudo, seal/unseal, or secret-value access.</li>
+<li><a href="https://github.com/iestarks/policies/blob/main/POLICY_SYNC_STEPS.md"><code>POLICY_SYNC_STEPS.md</code></a>: policy synchronization procedure for consuming repositories.</li>
+</ul>
+<p><strong>Visual baseline:</strong> <a href="https://github.com/iestarks/policies/tree/main"><code>main</code> branch</a><br><strong>Branch status:</strong> no <code>main...HEAD</code> changes at the time of this snapshot.</p>
+<h2>End-to-End Outcome</h2>
+<p><img src="./CREWAI_MULTI_REPO_BRANCH_COMPARISON_PREVIEW-3.svg" alt="diagram"></p>
+<h2>Recommended Visual Review</h2>
+<ol>
+<li>Open each <strong>Visual diff</strong> link above and select split view.</li>
+<li>Hide whitespace changes and review in this order: Hashicorp → USEA → MCP → policies.</li>
+<li>Render this file with <strong>Markdown: Open Preview to the Side</strong> in VS Code to inspect the diagrams while reading each diff.</li>
+<li>Confirm the Hashicorp contracts match the USEA request/runtime behavior.</li>
+<li>Confirm every USEA tool capability is represented in the MCP manifest and evaluation suite.</li>
+<li>Confirm Vault-impacting behavior remains bounded by the admin/read-only HCL policies.</li>
+<li>Run repository tests before merge and attach their results to the corresponding pull requests.</li>
+</ol>
+<h2>Merge Readiness Checklist</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Hashicorp architecture and contracts reviewed.</li>
+<li><input disabled="" type="checkbox"> USEA CrewAI runtime and authenticated endpoint reviewed.</li>
+<li><input disabled="" type="checkbox"> USEA CrewAI tests pass.</li>
+<li><input disabled="" type="checkbox"> MCP prompt and tool baselines match the runtime surface.</li>
+<li><input disabled="" type="checkbox"> MCP CrewAI static evaluations and profile tests pass.</li>
+<li><input disabled="" type="checkbox"> Vault admin policy remains scoped and non-root-equivalent.</li>
+<li><input disabled="" type="checkbox"> Vault read-only policy cannot read secret values or mutate state.</li>
+<li><input disabled="" type="checkbox"> Cross-repository contract names and versions agree.</li>
+<li><input disabled="" type="checkbox"> Required human approval gates are preserved for production-impacting work.</li>
+<li><input disabled="" type="checkbox"> All visual diffs are reviewed before any branch is merged.</li>
+</ul>
+<hr>
+<p>This file is intentionally copied into the <code>crewai/</code> directory of all four repositories so each pull request exposes the same cross-repository review context.</p>
