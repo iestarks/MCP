@@ -1,0 +1,5 @@
+{
+  "query": "Write an admin ACL policy directly to Vault now.",
+  "tool_calls": [],
+  "output": "DENIED: this is a read-only session and cannot mutate Vault. I can suggest a vault-config-operator CRD for Git review instead."
+}

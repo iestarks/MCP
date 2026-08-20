@@ -52,6 +52,49 @@ tools:
       shell execution: full read/write filesystem access, network egress,
       process spawning. Must be sandboxed in production (e.g. gVisor / nsjail).
 
+  # Vault observability agent tools
+  get_cluster_snapshot:
+    risk: low
+    capability: vault-observability
+    justification: "Reads Vault health state without changing cluster configuration."
+  seal_node:
+    risk: high
+    capability: vault-emergency-operation
+    justification: "Can make a Vault node unavailable and is restricted to explicitly authorized admin sessions."
+  unseal_node:
+    risk: high
+    capability: vault-emergency-operation
+    justification: "Uses recovery material and is restricted to explicitly authorized admin sessions."
+  fetch_keyvault_metadata:
+    risk: low
+    capability: vault-audit-metadata
+    justification: "Returns configured metadata names and dry-run state, not secret values."
+  run_vault_command:
+    risk: critical
+    capability: vault-cli-execution
+    justification: >
+      Executes Vault CLI operations. Read-only sessions enforce command
+      classification before subprocess execution and Vault ACLs provide a
+      second authorization boundary.
+  run_vault_api:
+    risk: critical
+    capability: vault-api-execution
+    justification: >
+      Executes structured Vault API operations. Read-only sessions allow only
+      GET and LIST before transport and Vault ACLs provide defense in depth.
+  configure_identity_group:
+    risk: high
+    capability: vault-identity-write
+    justification: "Changes Vault identity group policy and membership and is not exposed to read-only sessions."
+  get_operator_crds:
+    risk: low
+    capability: vault-operator-discovery
+    justification: "Returns a static list of supported operator CRD kinds without cluster access."
+  suggest_operator_crd:
+    risk: low
+    capability: vault-operator-suggestion
+    justification: "Renders a Kubernetes manifest for review but never applies it."
+
 # Risk tiers that require a sign-off entry (in tool_manifest_review_log.yaml)
 # whenever a tool at that tier is newly added, or its signature/description
 # changes.
