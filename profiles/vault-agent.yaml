@@ -1,0 +1,23 @@
+name: vault-agent
+repo: iestarks/Hashicorp-Azure-LLM
+description: >
+  Read-only Vault observability agent that delegates configuration writes to
+  vault-config-operator CRDs.
+
+prompt:
+  target_file: hashicorp-vault-agentic-agent.py
+  variable_name: system_prompt
+  max_length_chars: 6000
+
+tool_manifest:
+  target_file: hashiscorp_agentic_ai/vault_agent_runtime.py
+  decorator_name: tool
+  baseline_file: vault-agent/tool_manifest.baseline.json
+
+mcp_servers:
+  config_file: vault-agent.mcp.json
+
+evals:
+  suite_file: vault-agent_suite.yaml
+  fixtures_dir: fixtures
+  live_entrypoint: hashicorp-vault-agentic-agent.py

@@ -151,7 +151,7 @@ def gate(repo_path: str | Path, profile_name: str = "usea") -> GateResult:
         if not re.search(rule["pattern"], extracted, re.IGNORECASE):
             violations.append(f"required pattern missing ({rule['pattern']}): {rule.get('reason', '')}")
 
-    max_len = policy.get("max_length_chars")
+    max_len = prompt_cfg.get("max_length_chars", policy.get("max_length_chars"))
     if max_len and len(extracted) > max_len:
         violations.append(f"prompt is {len(extracted)} chars, exceeds max_length_chars={max_len}")
 

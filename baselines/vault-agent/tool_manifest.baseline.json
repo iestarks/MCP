@@ -1,0 +1,66 @@
+[
+  {
+    "name": "configure_identity_group",
+    "description": "Safely create or update an internal Vault identity group, validate its ACL policies, preserve existing members, add one entity UUID, and verify the result.",
+    "parameters": [
+      {"name": "group_name", "annotation": "str", "default": null},
+      {"name": "policies", "annotation": "list[str]", "default": null},
+      {"name": "entity_id", "annotation": "str", "default": null}
+    ]
+  },
+  {
+    "name": "fetch_keyvault_metadata",
+    "description": "Return Azure Key Vault metadata for logging and audit visibility.",
+    "parameters": []
+  },
+  {
+    "name": "get_cluster_snapshot",
+    "description": "Return a JSON snapshot of Vault nodes and health. Includes failed AZs when all nodes in an AZ are unhealthy.",
+    "parameters": []
+  },
+  {
+    "name": "get_operator_crds",
+    "description": "List vault-config-operator CRD kinds suitable for declarative Vault changes.",
+    "parameters": []
+  },
+  {
+    "name": "run_vault_api",
+    "description": "Execute a structured Vault API request; read-only sessions allow only GET and LIST.",
+    "parameters": [
+      {"name": "method", "annotation": "str", "default": null},
+      {"name": "path", "annotation": "str", "default": null},
+      {"name": "data", "annotation": "dict[str, Any] | None", "default": "None"}
+    ]
+  },
+  {
+    "name": "run_vault_command",
+    "description": "Run a Vault CLI command inside the admin pod; read-only sessions deny mutations before execution.",
+    "parameters": [
+      {"name": "vault_command", "annotation": "str", "default": null}
+    ]
+  },
+  {
+    "name": "seal_node",
+    "description": "Seal the given Vault node by name.",
+    "parameters": [
+      {"name": "node_name", "annotation": "str", "default": null}
+    ]
+  },
+  {
+    "name": "suggest_operator_crd",
+    "description": "Render, but never apply, a vault-config-operator Kubernetes manifest.",
+    "parameters": [
+      {"name": "kind", "annotation": "str", "default": null},
+      {"name": "name", "annotation": "str", "default": null},
+      {"name": "namespace", "annotation": "str", "default": null},
+      {"name": "spec", "annotation": "dict[str, Any]", "default": null}
+    ]
+  },
+  {
+    "name": "unseal_node",
+    "description": "Unseal the given Vault node by name using key shares from the configured recovery store.",
+    "parameters": [
+      {"name": "node_name", "annotation": "str", "default": null}
+    ]
+  }
+]

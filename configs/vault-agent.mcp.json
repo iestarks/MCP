@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "policy-gate": {
+      "command": "python3",
+      "args": ["/Users/wolfpacker/development/MCP/server.py"],
+      "env": {},
+      "trust_review": {
+        "reviewer": "platform-security",
+        "date": "2026-07-28",
+        "notes": "Reuses the previously reviewed first-party policy-gate server configuration."
+      }
+    }
+  }
+}

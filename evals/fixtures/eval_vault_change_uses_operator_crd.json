@@ -1,0 +1,5 @@
+{
+  "query": "Create a read-only Vault policy for the agent.",
+  "tool_calls": ["suggest_operator_crd"],
+  "output": "Generated a vault-config-operator Policy CRD with apply=false. Commit the manifest for review; the operator remains the only component that may apply the change to Vault."
+}

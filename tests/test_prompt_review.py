@@ -83,3 +83,19 @@ def test_prompt_approval_is_bound_to_exact_digest(monkeypatch, tmp_path):
     source.write_text("system_content = 'changed'\n", encoding="utf-8")
     rejected = prompt_review.gate(tmp_path)
     assert any("has no matching approval" in violation for violation in rejected.violations)
+
+
+def test_profile_can_override_prompt_length_limit(monkeypatch, tmp_path):
+    source = tmp_path / "agent.py"
+    source.write_text("system_content = '" + ("x" * 20) + "'\n", encoding="utf-8")
+
+    monkeypatch.setattr(prompt_review, "load_profile", lambda _name: {
+        "prompt": {"target_file": "agent.py", "max_length_chars": 25}
+    })
+    monkeypatch.setattr(prompt_review, "load_policy", lambda name: {
+        "prompt_policy.yaml": {"max_length_chars": 10},
+        "prompt_review_log.yaml": {},
+    }[name])
+
+    result = prompt_review.gate(tmp_path)
+    assert result.status == "pass", result.violations
