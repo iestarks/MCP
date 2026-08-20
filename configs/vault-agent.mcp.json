@@ -2,7 +2,7 @@
   "mcpServers": {
     "policy-gate": {
       "command": "python3",
-      "args": ["/Users/wolfpacker/development/MCP/server.py"],
+      "args": ["./server.py"],
       "env": {},
       "trust_review": {
         "reviewer": "platform-security",
